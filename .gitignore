@@ -1,0 +1,7 @@
+.vscode/
+node_modules/
+dist/
+
+.eslintcache
+npm-debug.log
+todo.txt
