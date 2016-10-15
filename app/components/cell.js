@@ -1,10 +1,11 @@
 import * as React from 'react';
 
 export default function Cell(props) {
-  const { length, mark, bgColor } = props;
+  const { id, length, mark, bgColor } = props;
 
   return (
     <div
+        id={`cell-${id}`}
         className="cell-container"
         style={{
           boxSizing: 'border-box',
@@ -27,6 +28,7 @@ export default function Cell(props) {
 }
 
 Cell.propTypes = {
+  id: React.PropTypes.number.isRequired,
   length: React.PropTypes.string.isRequired,
   mark: React.PropTypes.string.isRequired,
   bgColor: React.PropTypes.string.isRequired,

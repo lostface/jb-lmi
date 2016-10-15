@@ -8,6 +8,7 @@ const createCellNode = cellData => {
   return (
     <Cell
       key={cell.id}
+      id={cell.id}
       length={`calc(40vw / ${rowSize})`}
       mark={cell.mark}
       bgColor={cell.bgColor}
