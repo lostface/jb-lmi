@@ -1,35 +1,22 @@
 import * as React from 'react';
 import * as R from 'ramda';
-import Cell from './cell';
+import Row from './row';
 
-const createCellNode = R.curry(
-  (size, rowIndex, colIndex) => (
-    <Cell
-      key={`cell-${rowIndex}-${colIndex}`}
-      length={`calc(40vw / ${size})`}
-      mark="O"
-      bgColor="#fff"
-    />
-  )
-);
-
-const createRowNode = R.curry(
-  (size, rowIndex) => (
-    <div
-        key={`row-${rowIndex}`}
-        style={{
-          boxSizing: 'border-box',
-          margin: 0,
-          padding: 0,
-          border: 'none',
-        }}>
-      {R.map(createCellNode(size, rowIndex), R.range(0, size))}
-    </div>
-  )
+const createRowNodes = (boardSize, data) => (
+  R.compose(
+    R.map(
+      rowData => <Row key={rowData.id} size={rowData.boardSize} cells={rowData.cells} />
+    ),
+    R.zipWith(
+      (index, cells) => ({ id: index, boardSize, cells }),
+      R.range(0, boardSize * boardSize)
+    ),
+    R.splitEvery(boardSize),
+  )(data)
 );
 
 export default function Board(props) {
-  const { size } = props;
+  const { size, data } = props;
 
   return (
     <div
@@ -42,14 +29,18 @@ export default function Board(props) {
           display: 'inline-block',
           backgroundColor: '#f00',
         }}>
-      {R.map(createRowNode(size), R.range(0, size))}
+      {createRowNodes(size, data)}
     </div>
   );
 }
 
 Board.propTypes = {
   size: React.PropTypes.number.isRequired,
-};
-
-Board.defaultProps = {
+  data: React.PropTypes.arrayOf(
+    React.PropTypes.shape({
+      id: React.PropTypes.number.isRequired,
+      mark: React.PropTypes.string.isRequired,
+      bgColor: React.PropTypes.string.isRequired,
+    })
+  ),
 };
