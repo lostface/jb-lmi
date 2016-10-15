@@ -26,7 +26,7 @@ export default React.createClass({
             padding: 0,
             border: 'none',
           }}>
-        <Board size={BOARD_SIZE} data={boardData} />
+        <Board size={BOARD_SIZE} data={boardData} onPlaceMarkTrigger={this.handlePlaceMarkTrigger} />
       </div>
     );
   },
@@ -35,5 +35,9 @@ export default React.createClass({
     return {
       boardData: getDefaultBoardData(BOARD_SIZE),
     };
-  }
+  },
+
+  handlePlaceMarkTrigger(cellId) {
+    // TODO
+  },
 });
