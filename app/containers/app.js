@@ -37,7 +37,18 @@ export default React.createClass({
     };
   },
 
+  placeMark(index, mark) {
+    const boardData = R.adjust(
+      R.assoc('mark', mark),
+      index,
+      this.state.boardData
+    );
+
+    this.setState({ boardData });
+  },
+
   handlePlaceMarkTrigger(cellId) {
-    // TODO
+    // INFO cellId is same as the index of the cell in boardData, so no need for extra find
+    this.placeMark(cellId, 'X');
   },
 });
