@@ -68,6 +68,10 @@ export default React.createClass({
     return R.filter(isEmptyCell, this.state.boardData);
   },
 
+  userMarks(cellId) {
+    this.placeMark(cellId, CELL_MARK_USER);
+  },
+
   computerMarks() {
     const emptyCells = this.getEmptyCells();
     if (emptyCells.length == 0) {
@@ -92,7 +96,7 @@ export default React.createClass({
     const cell = this.getCellById(cellId);
 
     if (usersTurn && isEmptyCell(cell)) {
-      this.placeMark(cellId, CELL_MARK_USER);
+      this.userMarks(cellId);
       this.computerIsNext();
       this.triggerComputerPlay();
     }
