@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as R from 'ramda';
-import { randomIntBetween } from '../common';
+import { randomIntBetween, getFlatMatrixRows, getFlatMatrixCols } from '../common';
 import {
     BOARD_SIZE,
     CELL_BG_COLOR_DEFAULT,
@@ -29,23 +29,6 @@ const cellsToMarkStr = R.compose(
   R.join(''),
   R.pluck('mark')
 );
-
-const getFlatMatrixRows = R.splitEvery;
-
-const getFlatMatrixCols = (size, data) => {
-  // TODO simpler way?
-  const cols = R.compose(
-    R.map(() => []),
-    R.range
-  )(0, size);
-
-  R.reduce((acc, cell) => {
-    acc[cell.id % size].push(cell);
-    return acc;
-  })(cols, data);
-
-  return cols;
-};
 
 export default React.createClass({
   render() {
