@@ -8,6 +8,7 @@ import {
     CELL_MARK_USER,
     CELL_MARK_COMP,
     COMPUTER_SPEED,
+    LOCAL_STORAGE_KEY,
     WIN_MARKS_COUNT
   } from '../config';
 import { Board } from '../components';
@@ -21,6 +22,12 @@ const getDefaultBoardData = boardSize =>
     }),
     R.range(0, boardSize * boardSize)
   );
+
+const getDefaultState = () => ({
+  boardData: getDefaultBoardData(BOARD_SIZE),
+  gameFinished: false,
+  usersTurn: true,
+});
 
 const isEmptyCell = R.propEq('mark', CELL_MARK_DEFAULT);
 const isMarkedCell = R.complement(isEmptyCell);
@@ -49,11 +56,25 @@ export default React.createClass({
   },
 
   getInitialState() {
-    return {
-      boardData: getDefaultBoardData(BOARD_SIZE),
-      gameFinished: false,
-      usersTurn: true,
-    };
+    const savedState = JSON.parse(
+      localStorage.getItem(LOCAL_STORAGE_KEY)
+    );
+
+    return savedState ? savedState : getDefaultState();
+  },
+
+  componentDidMount() {
+    const { usersTurn } = this.state;
+    if (!usersTurn) {
+      this.triggerComputerPlay();
+    }
+  },
+
+  componentWillUpdate(nextProps, nextState) {
+    localStorage.setItem(
+      LOCAL_STORAGE_KEY,
+      JSON.stringify(nextState)
+    );
   },
 
   placeMark(index, mark) {

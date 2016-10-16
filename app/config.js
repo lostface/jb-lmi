@@ -6,3 +6,4 @@ export const CELL_MARK_DEFAULT = '';
 export const CELL_MARK_USER = 'X';
 export const CELL_MARK_COMP = 'O';
 export const COMPUTER_SPEED = 500;
+export const LOCAL_STORAGE_KEY = 'tic-tac-toe-forever';
