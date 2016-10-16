@@ -208,32 +208,42 @@ export default React.createClass({
 
   triggerComputerPlay() {
     setTimeout(() => {
-      // TODO ramdaify
       const userWon = this.isUserWon();
       const computerWon = this.isComputerWon();
       const noEmptyCells = this.hasNoEmptyCells();
 
       if (noEmptyCells || userWon || computerWon) {
         this.finishGame();
-      } else {
-        this.computerMarks();
-        this.userIsNext();
+        return;
       }
+
+      this.computerMarks();
+      this.userIsNext();
+
+      // TODO temporary hack to finish the game when comp wins
+      this.handlePlaceMarkTrigger();
     }, COMPUTER_SPEED);
   },
 
   handlePlaceMarkTrigger(cellId) {
-    // TODO ramdaify
-    const { usersTurn } = this.state;
-    const cell = this.getCellById(cellId);
-
     const userWon = this.isUserWon();
     const computerWon = this.isComputerWon();
     const noEmptyCells = this.hasNoEmptyCells();
 
     if (noEmptyCells || userWon || computerWon) {
       this.finishGame();
-    } else if (usersTurn && isEmptyCell(cell)) {
+      return;
+    }
+
+    // TODO temporary hack to support finish the game when comp wins
+    if (cellId == null) {
+      return;
+    }
+
+    const { usersTurn } = this.state;
+    const cell = this.getCellById(cellId);
+
+    if (usersTurn && isEmptyCell(cell)) {
       this.userMarks(cellId);
       this.computerIsNext();
       this.triggerComputerPlay();
