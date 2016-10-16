@@ -27,6 +27,7 @@ const getDefaultState = () => ({
   boardData: getDefaultBoardData(BOARD_SIZE),
   gameFinished: false,
   usersTurn: true,
+  userWon: false,
 });
 
 const isEmptyCell = R.propEq('mark', CELL_MARK_DEFAULT);
@@ -39,34 +40,44 @@ const cellsToMarkStr = R.compose(
 
 export default React.createClass({
   render() {
-    const { boardData } = this.state;
+    const { boardData, userWon, gameFinished } = this.state;
+    const gameOverMessage = gameFinished ? (userWon ? 'Congrats!' : 'Next Time') : '';
 
     return (
       <div
           className="app-container"
-          style={{
-            margin: 0,
-            padding: 0,
-            border: 'none',
-          }}>
+          style={{ margin: 0, padding: 0 }}>
 
-        <Board
-          size={BOARD_SIZE}
-          data={boardData}
-          onPlaceMarkTrigger={this.handlePlaceMarkTrigger}
-        />
+        <Board size={BOARD_SIZE} data={boardData} onPlaceMarkTrigger={this.handlePlaceMarkTrigger} />
 
-        <button
-            className="new-game-btn"
+        <div
             style={{
+              display: 'inline-block',
               verticalAlign: 'top',
               marginLeft: '2vw',
-              fontSize: '4vw',
-            }}
-            onClick={this.handleNewGameClick}
-        >
-          New Game
-        </button>
+            }}>
+          <button
+              className="new-game-btn"
+              style={{
+                margin: 0,
+                padding: 0,
+                fontSize: '4vw',
+              }}
+              onClick={this.handleNewGameClick}>
+            New Game
+          </button>
+          <p
+              style={{
+                fontSize: '6vw',
+                margin: 0,
+                padding: 0,
+                marginTop: '11.5vw',
+                marginLeft: '15.5vw',
+              }}>
+            {gameOverMessage}
+          </p>
+        </div>
+
       </div>
     );
   },
@@ -173,7 +184,10 @@ export default React.createClass({
 
   finishGame() {
     if (!this.state.gameFinished) {
-      this.setState({ gameFinished: true });
+      this.setState({
+        gameFinished: true,
+        userWon: this.isUserWon(),
+      });
     }
   },
 
