@@ -34,6 +34,7 @@ export default React.createClass({
   getInitialState() {
     return {
       boardData: getDefaultBoardData(BOARD_SIZE),
+      isUsersTurn: true,
     };
   },
 
@@ -47,6 +48,14 @@ export default React.createClass({
     this.setState({ boardData });
   },
 
+  userIsNext() {
+    this.setState({ isUsersTurn: true });
+  },
+
+  computerIsNext() {
+    this.setState({ isUsersTurn: false });
+  },
+
   isEmptyCell(cellId) {
     // INFO cellId is same as the index of the cell in boardData, so no need for extra find
     return this.state.boardData[cellId].mark === CELL_MARK_DEFAULT;
@@ -54,9 +63,11 @@ export default React.createClass({
 
   handlePlaceMarkTrigger(cellId) {
     // TODO ramdaify
+    const { isUsersTurn } = this.state;
     // INFO cellId is same as the index of the cell in boardData, so no need for extra find
-    if (this.isEmptyCell(cellId)) {
+    if (isUsersTurn && this.isEmptyCell(cellId)) {
       this.placeMark(cellId, 'X');
+      this.computerIsNext();
     }
   },
 });
