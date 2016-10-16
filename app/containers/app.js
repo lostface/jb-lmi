@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as R from 'ramda';
-import { BOARD_SIZE, CELL_BG_COLOR_DEFAULT, CELL_MARK_DEFAULT } from '../config';
+import { BOARD_SIZE, CELL_BG_COLOR_DEFAULT, CELL_MARK_DEFAULT, CELL_MARK_USER, CELL_MARK_COMP, COMPUTER_SPEED } from '../config';
 import { Board } from '../components';
 
 const getDefaultBoardData = boardSize =>
@@ -12,6 +12,14 @@ const getDefaultBoardData = boardSize =>
     }),
     R.range(0, boardSize * boardSize)
   );
+
+const isEmptyCell = R.propEq('mark', CELL_MARK_DEFAULT);
+
+// TODO extract
+const randomIntBetween = (min, max) =>
+  Math.floor(
+    Math.random() * (max - min)
+  ) + min;
 
 export default React.createClass({
   render() {
@@ -34,7 +42,7 @@ export default React.createClass({
   getInitialState() {
     return {
       boardData: getDefaultBoardData(BOARD_SIZE),
-      isUsersTurn: true,
+      usersTurn: true,
     };
   },
 
@@ -49,25 +57,49 @@ export default React.createClass({
   },
 
   userIsNext() {
-    this.setState({ isUsersTurn: true });
+    this.setState({ usersTurn: true });
   },
 
   computerIsNext() {
-    this.setState({ isUsersTurn: false });
+    this.setState({ usersTurn: false });
   },
 
-  isEmptyCell(cellId) {
+  getCellById(cellId) {
     // INFO cellId is same as the index of the cell in boardData, so no need for extra find
-    return this.state.boardData[cellId].mark === CELL_MARK_DEFAULT;
+    return this.state.boardData[cellId];
+  },
+
+  getEmptyCells() {
+    return R.filter(isEmptyCell, this.state.boardData);
+  },
+
+  computerMarks() {
+    const emptyCells = this.getEmptyCells();
+    if (emptyCells.length == 0) {
+      return;
+    }
+
+    const index = randomIntBetween(0, emptyCells.length);
+    const targetCell = emptyCells[index];
+    this.placeMark(targetCell.id, CELL_MARK_COMP);
+  },
+
+  triggerComputerPlay() {
+    setTimeout(() => {
+      this.computerMarks();
+      this.userIsNext();
+    }, COMPUTER_SPEED);
   },
 
   handlePlaceMarkTrigger(cellId) {
     // TODO ramdaify
-    const { isUsersTurn } = this.state;
-    // INFO cellId is same as the index of the cell in boardData, so no need for extra find
-    if (isUsersTurn && this.isEmptyCell(cellId)) {
-      this.placeMark(cellId, 'X');
+    const { usersTurn } = this.state;
+    const cell = this.getCellById(cellId);
+
+    if (usersTurn && isEmptyCell(cell)) {
+      this.placeMark(cellId, CELL_MARK_USER);
       this.computerIsNext();
+      this.triggerComputerPlay();
     }
   },
 });
