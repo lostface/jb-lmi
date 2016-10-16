@@ -8,7 +8,7 @@ export const randomIntBetween = (min, max) =>
 export const getFlatMatrixRows = R.splitEvery;
 
 export const getFlatMatrixCols = (size, data) => {
-  // TODO simpler way?
+  // TODO simpler solution?
   const cols = R.compose(
     R.map(() => []),
     R.range
