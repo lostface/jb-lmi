@@ -11,8 +11,8 @@ const createRowNodes = (boardSize, data) => (
       (index, cells) => ({ id: index, boardSize, cells }),
       R.range(0, boardSize * boardSize)
     ),
-    R.splitEvery(boardSize),
-  )(data)
+    R.splitEvery,
+  )(boardSize, data)
 );
 
 export default React.createClass({
