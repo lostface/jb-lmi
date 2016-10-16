@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as R from 'ramda';
+import { randomIntBetween } from '../common';
 import { BOARD_SIZE, CELL_BG_COLOR_DEFAULT, CELL_MARK_DEFAULT, CELL_MARK_USER, CELL_MARK_COMP, COMPUTER_SPEED } from '../config';
 import { Board } from '../components';
 
@@ -14,12 +15,6 @@ const getDefaultBoardData = boardSize =>
   );
 
 const isEmptyCell = R.propEq('mark', CELL_MARK_DEFAULT);
-
-// TODO extract
-const randomIntBetween = (min, max) =>
-  Math.floor(
-    Math.random() * (max - min)
-  ) + min;
 
 export default React.createClass({
   render() {
