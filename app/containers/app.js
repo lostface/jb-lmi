@@ -45,12 +45,28 @@ export default React.createClass({
       <div
           className="app-container"
           style={{
-            boxSizing: 'border-box',
             margin: 0,
             padding: 0,
             border: 'none',
           }}>
-        <Board size={BOARD_SIZE} data={boardData} onPlaceMarkTrigger={this.handlePlaceMarkTrigger} />
+
+        <Board
+          size={BOARD_SIZE}
+          data={boardData}
+          onPlaceMarkTrigger={this.handlePlaceMarkTrigger}
+        />
+
+        <button
+            className="new-game-btn"
+            style={{
+              verticalAlign: 'top',
+              marginLeft: '2vw',
+              fontSize: '4vw',
+            }}
+            onClick={this.handleNewGameClick}
+        >
+          New Game
+        </button>
       </div>
     );
   },
@@ -208,5 +224,9 @@ export default React.createClass({
       this.computerIsNext();
       this.triggerComputerPlay();
     }
+  },
+
+  handleNewGameClick() {
+    this.setState(getDefaultState());
   },
 });
